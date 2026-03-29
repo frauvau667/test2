@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suche: Beachtennisordnung</title>
+    <style>
+        body { font-family: sans-serif; background: #fdfae6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddb; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
+        .rule-card { border-left: 5px solid #f1c40f; padding: 15px; margin-bottom: 10px; background: #fffff0; }
+        .source { font-size: 0.8em; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏖️ Suche: Beachtennisordnung</h1>
+    <input type="text" id="search" placeholder="Stichwort suchen (z.B. Rangliste, Rechte, Regeln)..." onkeyup="search()">
+    <div id="results"></div>
+</div>
+<script>
+    const data = [
+        { q: "Welche Regeln gelten für Beach Tennis?", a: "Es gelten die jeweils gültigen Beach Tennis-Regeln des Deutschen Tennis Bundes (DTB) [24].", s: "Beach-Tennis-O §2" },
+        { q: "Wer vergibt die Meisterschaften?", a: "Nationale und internationale Meisterschaften auf Bundesebene werden ausschließlich durch den DTB vergeben [24].", s: "Beach-Tennis-O §3" },
+        { q: "Wer hat die Vermarktungsrechte?", a: "Sämtliche Fernseh-, Vermarktungs- und Terminhoheitsrechte liegen beim DTB [25].", s: "Beach-Tennis-O §3" },
+        { q: "Gibt es eine Rangliste?", a: "Ja, es werden nationale Beach Tennis-Ranglisten geführt, deren Berechnung der DTB bestimmt [26].", s: "Beach-Tennis-O §5" },
+        { q: "Wer darf an Weltmeisterschaften teilnehmen?", a: "Die Vertreter zur Teilnahme an Welt- und Europameisterschaften werden vom DTB und den zuständigen Gremien benannt [25].", s: "Beach-Tennis-O §4" }
+    ];
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const results = document.getElementById('results');
+        results.innerHTML = data.filter(i => i.q.toLowerCase().includes(query) || i.a.toLowerCase().includes(query))
+            .map(i => `<div class='rule-card'><strong>${i.q}</strong><p>${i.a}</p><div class='source'>Quelle: ${i.s}</div></div>`).join('');
+    }
+    search();
+</script>
+</body>
+</html>
