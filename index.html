@@ -3,149 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tennis-Regel-Check Saarland & Regionalliga</title>
+    <title>Tennis-Regelportal: Saarland & Überregional</title>
     <style>
-        :root { --stb-blue: #0056b3; --stb-yellow: #ffcc00; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .header { text-align: center; border-bottom: 3px solid var(--stb-blue); margin-bottom: 20px; padding-bottom: 10px; }
-        .search-container { position: sticky; top: 10px; background: white; padding: 10px 0; z-index: 100; }
-        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; outline: none; }
-        input[type="text"]:focus { border-color: var(--stb-blue); }
-        .result-count { font-size: 0.9em; color: #666; margin: 10px 0; }
-        .rule-card { background: #fff; border: 1px solid #eee; border-left: 6px solid var(--stb-blue); padding: 15px; margin-bottom: 15px; border-radius: 4px; display: block; }
-        .category { font-size: 0.75em; font-weight: bold; text-transform: uppercase; color: var(--stb-blue); margin-bottom: 5px; }
-        .question { font-weight: bold; font-size: 1.1em; margin-bottom: 8px; color: #000; }
-        .answer { line-height: 1.5; color: #444; }
-        .source { font-size: 0.8em; color: #888; margin-top: 8px; font-style: italic; }
-        .highlight { background: var(--stb-yellow); padding: 2px; }
-        footer { text-align: center; font-size: 0.8em; color: #999; margin-top: 30px; }
+        :root { --stb-blue: #0056b3; --dtb-red: #c00; --beach-gold: #f1c40f; }
+        body { font-family: -apple-system, system-ui, sans-serif; line-height: 1.5; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        header { text-align: center; padding: 40px 20px; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        h1 { color: var(--stb-blue); margin: 0; font-size: 2em; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; text-decoration: none; color: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; border-top: 8px solid #ccc; }
+        .card:hover { transform: translateY(-5px); }
+        .card h2 { margin-top: 0; }
+        
+        .card-wspo { border-top-color: var(--stb-blue); }
+        .card-to { border-top-color: var(--dtb-red); }
+        .card-beach { border-top-color: var(--beach-gold); }
+
+        .quick-info { background: #fffbe6; border-left: 5px solid #ffe58f; padding: 20px; border-radius: 8px; margin-top: 40px; }
+        .quick-info h3 { margin-top: 0; color: #856404; }
+        
+        footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1 style="margin:0; color: var(--stb-blue);">🎾 Tennis-Regel-Check</h1>
-        <p style="margin:5px 0;">Saarland (STB) & Regionalliga (DTB)</p>
+    <header>
+        <h1>🎾 Tennis-Regelsuche</h1>
+        <p>Offizielle Bestimmungen für das Saarland (STB) & den DTB-Bereich</p>
+    </header>
+
+    <div class="grid">
+        <!-- Link zur Wettspielordnung -->
+        <a href="wspo.html" class="card card-wspo">
+            <h2>Mannschafts-Betrieb</h2>
+            <p><strong>Wettspielordnung (WSpO)</strong></p>
+            <p>Regeln für Medenspiele, Aufstellungen, MTB-Regelung und Wertungspunkte von A-Klasse bis Saarlandliga.</p>
+            <span style="color: var(--stb-blue); font-weight: bold;">Zur Suche →</span>
+        </a>
+
+        <!-- Link zur Turnierordnung -->
+        <a href="to.html" class="card card-to">
+            <h2>Turnier-Betrieb</h2>
+            <p><strong>Turnierordnung (TO)</strong></p>
+            <p>Regeln für LK- und Ranglistenturniere, Lucky Loser, Setzlisten, Kleidungsvorschriften und Altersklassen.</p>
+            <span style="color: var(--dtb-red); font-weight: bold;">Zur Suche →</span>
+        </a>
+
+        <!-- Link zur Beachtennisordnung -->
+        <a href="beach.html" class="card card-beach">
+            <h2>Beach Tennis</h2>
+            <p><strong>Beachtennisordnung</strong></p>
+            <p>Spezifische Bestimmungen für Beach-Tennis-Veranstaltungen, Ranglisten und Meisterschaften des DTB.</p>
+            <span style="color: #b8860b; font-weight: bold;">Zur Suche →</span>
+        </a>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Stichwort eingeben (z.B. MTB, Schuhe, w.o., Verspätung)..." onkeyup="performSearch()">
-        <div id="count" class="result-count">Hinterlegte Fälle: <span id="totalNum"></span></div>
+    <div class="quick-info">
+        <h3>📌 Wichtige Sofort-Regeln</h3>
+        <ul>
+            <li><strong>Ausweispflicht:</strong> Jeder Spieler muss zur Identifizierung einen amtlichen Lichtbildausweis mitführen [1, 2].</li>
+            <li><strong>Match-Tie-Break:</strong> Im STB wird ein notwendiger 3. Satz grundsätzlich als MTB bis 10 Punkte gespielt [3, 4].</li>
+            <li><strong>Ballmarke:</strong> Für alle STB-Verbandsspiele und Turniere sind Bälle der Marke <em>Dunlop Fort Tournament</em> vorgeschrieben [5, 6].</li>
+            <li><strong>Identische Platzarten:</strong> Mannschaftsbegegnungen müssen zwingend auf einer einheitlichen Platzart ausgetragen werden [7].</li>
+        </ul>
     </div>
 
-    <div id="results">
-        <!-- Hier erscheinen die Suchergebnisse -->
-    </div>
+    <footer>
+        Basierend auf dem Stand April 2025/2026. <br>
+        Diese Seite dient der schnellen Information. Im Zweifelsfall gelten die gedruckten Fassungen der Ordnungen.
+    </footer>
 </div>
 
-<footer>
-    Datenstand: April 2025/2026. Basierend auf STB-WO, DTB-TO und Refresher-Dokumenten.
-</footer>
-
-<script>
-    // Integrierte Wissensdatenbank aus den Quellen
-    const database = [
-        {
-            cat: "STB Saarland (Klassen-Betrieb)",
-            q: "Wie wird im STB der 3. Satz gewertet?",
-            a: "Ein notwendiger 3. Satz wird grundsätzlich als Match-Tie-Break bis 10 Punkte gespielt. Er wird im Spielbericht mit dem tatsächlichen Punktergebnis (z.B. 10:2) eingetragen, zählt in der Gesamtsumme der Spiele aber nur als 1:0 für den Sieger.",
-            src: "STB-WO §18.2",
-            tags: "dritter satz match tie break mtb wertung punkte"
-        },
-        {
-            cat: "Verspätung & Nichtantreten (STB)",
-            q: "Was passiert, wenn ein Spieler oder eine Mannschaft zu spät kommt?",
-            a: "15 Min. nach Aufruf: Das Spiel gilt als 6:0, 6:0 verloren (w.o.). 60 Min. nach offiziellem Beginn: Wenn weniger als 4 (6er-Team) bzw. 3 (4er-Team) Spieler anwesend sind, gilt die Mannschaft als nicht angetreten. Folge: Strafwertung 0:21/0:14 und die Mannschaft ist erster Absteiger.",
-            src: "STB-WO §16a.6 / §18.4",
-            tags: "verspätung zeit nichtantreten strafe abstieg"
-        },
-        {
-            cat: "Refresher 2026 / DTB",
-            q: "Darf man mit einem Shirt einer anderen Meisterschaft (z.B. ITA Championships) spielen?",
-            a: "Nein. Werbung für andere Sportveranstaltungen oder Events ist auf der Kleidung grundsätzlich nicht erlaubt.",
-            src: "DTB-TO §38.2 / Refresher Fall 1",
-            tags: "kleidung werbung shirt trikot erlaubt"
-        },
-        {
-            cat: "Refresher 2026 / DTB",
-            q: "Was passiert, wenn ein Spieler seine Tennisschuhe vergessen hat?",
-            a: "Er darf nicht ohne Schuhe oder in ungeeigneten Schuhen spielen. Er hat ab Aufruf 15 Minuten Zeit, sich geeignete Schuhe zu besorgen. Gelingt dies nicht, wird er disqualifiziert.",
-            src: "DTB-TO §38.1 / Refresher Fall 7",
-            tags: "schuhe kleidung vergessen socken sandplatz"
-        },
-        {
-            cat: "STB Saarland (Mannschaften)",
-            q: "Muss man einen Ausweis dabei haben?",
-            a: "Ja. Jeder Spieler muss einen amtlichen Lichtbildausweis (Personalausweis, Führerschein) mitführen. Mannschaftsführer sind verpflichtet, auf Verlangen des Oberschiedsrichters die Identität der Spieler nachzuweisen.",
-            src: "STB-WO §16.1",
-            tags: "ausweis identität legitimieren personalsusweis kontrolle"
-        },
-        {
-            cat: "Regionalliga / DTB",
-            q: "Wann wird im Doppel die 'No-Ad'-Regel angewendet?",
-            a: "In den Bundesligen der Damen wird im Doppel die 'No-Ad'-Regel (Entscheidungspunkt bei Einstand) angewendet. In den meisten anderen Klassen (außer explizit ausgeschrieben) gilt die normale Vorteils-Regel.",
-            src: "DTB-WSpO §55.9",
-            tags: "no-ad doppel einstand vorteil regionalliga"
-        },
-        {
-            cat: "STB Saarland (Wertung)",
-            q: "Wie viele Punkte gibt es für Einzel und Doppel im Saarland?",
-            a: "Sieg im Einzel: 2 Matchpunkte. Sieg im Doppel: 3 Matchpunkte. Gesamtsumme bei 6er-Teams: 21 Punkte. Bei 4er-Teams: 14 Punkte.",
-            src: "STB-WO §18.1",
-            tags: "punkte wertung einzel doppel tabelle"
-        },
-        {
-            cat: "Refresher 2026 / Lucky Loser",
-            q: "Darf ein Spieler als Lucky Loser einrücken, wenn er in Runde 1 eine Rast hatte?",
-            a: "Ja. Wenn ein gesetzter Spieler in der 1. Runde eine Rast hat und vor seinem ersten Spiel in der 2. Runde ausfällt, kann ein Lucky Loser eingesetzt werden.",
-            src: "DTB-TO §33.2.b / Refresher Fall 2",
-            tags: "lucky loser rast krankheit nachrücken"
-        },
-        {
-            cat: "STB Saarland (Turniere)",
-            q: "Welche Bälle sind bei STB-Turnieren vorgeschrieben?",
-            a: "Für LK-Turniere im STB ist zwingend die Marke 'Dunlop Fort Tournament' zu verwenden. Bei Jugendlichen gelten entsprechende Methodik-Bälle (z.B. Stage 2).",
-            src: "STB-Bestimmungen LK-Turniere Pkt. 3",
-            tags: "bälle marke dunlop fort tournament lk-turnier"
-        },
-        {
-            cat: "DTB / ITF Regeln",
-            q: "Was passiert, wenn ein Spieler während des Schlags laut ruft (z.B. 'Oh nein!')?",
-            a: "Wird der Gegner dadurch behindert, ist bei unabsichtlicher Behinderung der Punkt zu wiederholen. Bei absichtlicher Behinderung verliert der Spieler den Punkt.",
-            src: "ITF-Regel 26 / Refresher Fall 4",
-            tags: "behinderung rufen sprechen lärm"
-        }
-    ];
-
-    function performSearch() {
-        const input = document.getElementById('searchInput').value.toLowerCase();
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-        
-        const filtered = database.filter(item => 
-            item.q.toLowerCase().includes(input) || 
-            item.a.toLowerCase().includes(input) || 
-            item.tags.toLowerCase().includes(input)
-        );
-
-        document.getElementById('totalNum').innerText = filtered.length;
-
-        filtered.forEach(item => {
-            resultsDiv.innerHTML += `
-                <div class="rule-card">
-                    <div class="category">${item.cat}</div>
-                    <div class="question">${item.q}</div>
-                    <div class="answer">${item.a}</div>
-                    <div class="source">Quelle: ${item.src}</div>
-                </div>
-            `;
-        });
-    }
-
-    // Initial alle anzeigen
-    performSearch();
-</script>
 </body>
 </html>
