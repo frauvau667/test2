@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suche: Wettspielordnung (WSpO)</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
+        .rule-card { border-left: 5px solid #0056b3; padding: 15px; margin-bottom: 10px; background: #fafafa; }
+        .source { font-size: 0.8em; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎾 Suche: Wettspielordnung</h1>
+    <input type="text" id="search" placeholder="Stichwort suchen (z.B. Wertung, MTB, LK)..." onkeyup="search()">
+    <div id="results"></div>
+</div>
+<script>
+    const data = [
+        { q: "Wie wird der 3. Satz gewertet?", a: "Ein notwendiger 3. Satz wird im Einzel und Doppel als Match-Tie-Break bis 10 Punkte gespielt [1, 2]. Im STB wird das Ergebnis (z.B. 10:2) voll eingetragen, zählt in der Spielsumme aber nur 1:0 [2].", s: "STB §18.2 / TVRP §16.2" },
+        { q: "Wie viele Matchpunkte gibt es pro Sieg?", a: "Im STB zählt ein Sieg im Einzel 2 und im Doppel 3 Matchpunkte [2]. In Rheinland-Pfalz (TVRP) zählt jeder Sieg im Einzel und Doppel 1 Matchpunkt [3].", s: "STB §18.2 / TVRP §19.1" },
+        { q: "Wann gilt eine Mannschaft als nicht angetreten?", a: "Im STB gilt sie als nicht angetreten, wenn weniger als 4 (6er-Team) bzw. 3 (4er-Team) Spieler anwesend sind [4]. In Rheinland-Pfalz führt eine Verspätung von mehr als 45 Minuten zum Matchverlust [5].", s: "STB §17.2 / TVRP §15.4" },
+        { q: "In welcher Reihenfolge muss aufgestellt werden?", a: "Die Aufstellung muss zwingend nach der Spielstärke (Deutsche Rangliste, dann LK-Rangliste) erfolgen [6, 7]. Innerhalb der gleichen LK ist die Reihenfolge beliebig [8, 9].", s: "TVRP §9.6 / STB §13.2" },
+        { q: "Was passiert bei falscher Aufstellung?", a: "Werden Spieler an falschen Positionen eingesetzt, werden alle betroffenen und nachfolgenden Spiele mit 0:6, 0:6 gewertet [10, 11].", s: "TVRP §21.3 / STB §22.1" },
+        { q: "Sind Toilettenpausen erlaubt?", a: "Damen und Herren steht im Einzel eine Pause zu, im Doppel dem Team zwei Pausen [12, 13]. Sie sollten nach Satzabschluss genommen werden [12, 13].", s: "TVRP §16.2 / DTB-WSpO §55.7" },
+        { q: "Muss man einen Ausweis mitführen?", a: "Ja, die Identität der Spieler ist im Zweifelsfall durch einen Personalausweis oder eine andere Legitimation nachzuweisen [14].", s: "STB §16.1" },
+        { q: "Welche Bälle sind vorgeschrieben?", a: "Im STB ist für Verbandsspiele und Turniere die Marke Dunlop Fort Tournament zwingend vorgeschrieben [7, 15].", s: "STB §13 / STB-Bestimmungen LK Pkt. 3" }
+    ];
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const results = document.getElementById('results');
+        results.innerHTML = data.filter(i => i.q.toLowerCase().includes(query) || i.a.toLowerCase().includes(query))
+            .map(i => `<div class='rule-card'><strong>${i.q}</strong><p>${i.a}</p><div class='source'>Quelle: ${i.s}</div></div>`).join('');
+    }
+    search();
+</script>
+</body>
+</html>
+
