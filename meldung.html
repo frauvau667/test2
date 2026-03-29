@@ -1,0 +1,132 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meldewesen & Teilnahme: Saarland & Regionalliga</title>
+    <style>
+        :root { --stb-blue: #0056b3; --dtb-red: #c00; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; background: var(--bg); color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h1 { color: var(--stb-blue); text-align: center; border-bottom: 3px solid var(--stb-blue); padding-bottom: 10px; }
+        .search-box { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
+        .search-box:focus { border-color: var(--stb-blue); }
+        .info-card { background: #fff; border-left: 5px solid var(--stb-blue); padding: 15px; margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .category { font-size: 0.8em; font-weight: bold; color: #777; text-transform: uppercase; margin-bottom: 5px; }
+        .title { font-weight: bold; font-size: 1.1em; color: #000; margin-bottom: 8px; }
+        .content { font-size: 1em; }
+        .source { font-size: 0.8em; color: #888; margin-top: 10px; font-style: italic; }
+        footer { text-align: center; margin-top: 30px; color: #999; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎾 Teilnahme & Meldungen (STB/Regionalliga)</h1>
+    <input type="text" id="searchInput" class="search-box" placeholder="Suche nach Fristen, Lizenzen, Ausländer-Regeln, SG..." onkeyup="filterContent()">
+
+    <div id="infoContent">
+        <!-- Inhalte werden per Script geladen -->
+    </div>
+</div>
+
+<footer>
+    Basierend auf STB-WSpO 2025, DTB-WSpO und Regionalliga-Statut Süd-West.
+</footer>
+
+<script>
+    const infoData = [
+        {
+            cat: "Vereins-Voraussetzungen",
+            t: "Anforderungen an die Platzanlage",
+            a: "Vereine müssen über mindestens zwei einsatzbereite Freiplätze mit gleichem Belag sowie Umkleide- und Sanitärräume verfügen [1]. Für Spiele in der Saarland- und Verbandsliga werden grundsätzlich drei Plätze pro Wettkampf gefordert [1].",
+            s: "STB-WSpO §7.1"
+        },
+        {
+            cat: "Fristen & Termine",
+            t: "Mannschaftsmeldung (Fristen)",
+            a: "Die Meldung von Mannschaften, einschließlich der Jugend, muss bis zum 10. Dezember über das System TOS erfolgen [2]. Abmeldungen nach dem 31. Dezember führen zu einer Buße von 150 € und dem automatischen Zwangsabstieg der betroffenen Mannschaft [2].",
+            s: "STB-WSpO §7.1"
+        },
+        {
+            cat: "Spieler-Status",
+            t: "Allgemeine Spielberechtigung",
+            a: "Voraussetzung für jeden Spieler ist die Mitgliedschaft in einem STB-Verein und der Besitz einer DTB-ID-Nummer [3]. Ein Spieler darf pro Spieljahr (01.12. bis 30.09.) für maximal zwei Vereine des STB an offiziellen Wettbewerben teilnehmen [3].",
+            s: "STB-WSpO §4.1"
+        },
+        {
+            cat: "Spieler-Status",
+            t: "Vereinswechsel & Lizenzphasen",
+            a: "Vom 01.10. bis 30.11. ist ein Wechsel ohne Zustimmung des abgebenden Vereins möglich [3]. Ab dem 01.12. bis zum Ende der namentlichen Meldung ist ein Wechsel nur mit Zustimmung des alten Vereins über das Modul 'Spiellizenzverwaltung' möglich [3].",
+            s: "STB-WSpO §4.1"
+        },
+        {
+            cat: "Fristen & Termine",
+            t: "Namentliche Mannschaftsmeldung",
+            a: "Die namentliche Meldung der Spieler nach Spielstärke muss bis zum 15. März erfolgen [4]. Maßgeblich für die Reihenfolge ist die DTB-Rangliste und danach die LK-Rangliste zum Stichtag (1. Mittwoch im Februar), wobei die LK-Nachkommastelle zwingend berücksichtigt werden muss [5].",
+            s: "STB-WSpO §13.1 / §13.2"
+        },
+        {
+            cat: "Nachmeldungen",
+            t: "Vergessene Spieler nachmelden",
+            a: "Vergessene Spieler können bis eine Woche vor dem ersten Spieltag gegen eine Gebühr von 10 € nachgemeldet werden [4]. Ab dem 16. März müssen diese Spieler jedoch am Ende ihrer LK-Stufe (bei LK 1,0 bis 19,9) eingereiht werden [4].",
+            s: "STB-WSpO §13.1"
+        },
+        {
+            cat: "Jugend-Spezifika",
+            t: "Teilnahme von Jugendlichen",
+            a: "Jugendliche dürfen an Wettbewerben der Aktiven teilnehmen, sofern sie das 12. Lebensjahr am 31.12. des Vorjahres vollendet haben [6]. Eine jährliche sportärztliche Untersuchung ist für alle teilnehmenden Jugendlichen verpflichtend [1].",
+            s: "STB-WSpO §5 / §6"
+        },
+        {
+            cat: "Spielgemeinschaften",
+            t: "Bildung von SG",
+            a: "Spielgemeinschaften (SG) zwischen zwei oder mehr Vereinen sind in jeder Altersklasse zulässig [7]. Die Meldung der SG muss bis zum 10. Dezember inklusive der Festlegung der Spielorte erfolgen [7].",
+            s: "STB-WSpO §7.5"
+        },
+        {
+            cat: "Ausländer-Regelung",
+            t: "Einsatz von Nicht-EU-Ausländern (STB)",
+            a: "Pro Mannschaftsspiel darf grundsätzlich nur ein Spieler eingesetzt werden, der nicht die Staatsangehörigkeit eines EU-Mitgliedsstaates besitzt [8]. Ausnahmen für tiefere Ligen können aus Integrationsgründen beim Sportrat beantragt werden [8].",
+            s: "STB-WSpO §7.6"
+        },
+        {
+            cat: "Regionalliga Süd-West",
+            t: "Besonderheiten Regionalliga",
+            a: "Ein Verein darf in einem Wettbewerb der Regionalliga höchstens mit zwei Mannschaften vertreten sein [9]. Spieler, die für eine Bundesligamannschaft gemeldet sind, dürfen nicht zusätzlich für eine Regionalligamannschaft einer anderen Altersklasse gemeldet werden [10].",
+            s: "DTB-WSpO §41.3 / §44.2"
+        },
+        {
+            cat: "Ausländer-Regelung",
+            t: "Ausländer-Regelung (Regionalliga)",
+            a: "In der Regionalliga dürfen ab Damen 30/Herren 40 auf den Plätzen 1-7 nicht mehr als zwei Spieler gemeldet werden, die nicht die Staatsangehörigkeit eines EU-Mitgliedsstaates besitzen [11]. Für die Gleichstellung mit deutschen Spielern ist ein Wohnsitz von 5 Jahren und eine DTB-Mitgliedschaft von 3 Jahren nachzuweisen [12].",
+            s: "DTB-WSpO §44.8 / §44.9"
+        }
+    ];
+
+    function filterContent() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const container = document.getElementById('infoContent');
+        container.innerHTML = '';
+
+        const filtered = infoData.filter(i => 
+            i.cat.toLowerCase().includes(query) || 
+            i.t.toLowerCase().includes(query) || 
+            i.a.toLowerCase().includes(query)
+        );
+
+        filtered.forEach(item => {
+            container.innerHTML += `
+                <div class="info-card">
+                    <div class="category">${item.cat}</div>
+                    <div class="title">${item.t}</div>
+                    <div class="content">${item.a}</div>
+                    <div class="source">Quelle: ${item.s}</div>
+                </div>
+            `;
+        });
+    }
+
+    // Initial load
+    filterContent();
+</script>
+</body>
+</html>
