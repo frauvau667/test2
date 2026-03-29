@@ -2,98 +2,150 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>KI Tennis-Experte Saarland</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis-Regel-Check Saarland & Regionalliga</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .chat-container { max-width: 900px; margin: auto; background: white; border-radius: 12px; shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 80vh; }
-        .header { background: #004d99; color: white; padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px; }
-        #chat-window { flex-grow: 1; padding: 20px; overflow-y: auto; border-bottom: 1px solid #ddd; }
-        .message { margin-bottom: 15px; padding: 10px 15px; border-radius: 8px; max-width: 80%; }
-        .user { background: #e1f5fe; align-self: flex-end; margin-left: auto; }
-        .ai { background: #f1f1f1; align-self: flex-start; border-left: 4px solid #004d99; }
-        .input-area { padding: 20px; display: flex; gap: 10px; }
-        input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
-        button { padding: 10px 20px; background: #004d99; color: white; border: none; border-radius: 6px; cursor: pointer; }
-        .key-area { font-size: 0.8em; padding: 10px; background: #fff3e0; text-align: center; }
+        :root { --stb-blue: #0056b3; --stb-yellow: #ffcc00; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid var(--stb-blue); margin-bottom: 20px; padding-bottom: 10px; }
+        .search-container { position: sticky; top: 10px; background: white; padding: 10px 0; z-index: 100; }
+        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; outline: none; }
+        input[type="text"]:focus { border-color: var(--stb-blue); }
+        .result-count { font-size: 0.9em; color: #666; margin: 10px 0; }
+        .rule-card { background: #fff; border: 1px solid #eee; border-left: 6px solid var(--stb-blue); padding: 15px; margin-bottom: 15px; border-radius: 4px; display: block; }
+        .category { font-size: 0.75em; font-weight: bold; text-transform: uppercase; color: var(--stb-blue); margin-bottom: 5px; }
+        .question { font-weight: bold; font-size: 1.1em; margin-bottom: 8px; color: #000; }
+        .answer { line-height: 1.5; color: #444; }
+        .source { font-size: 0.8em; color: #888; margin-top: 8px; font-style: italic; }
+        .highlight { background: var(--stb-yellow); padding: 2px; }
+        footer { text-align: center; font-size: 0.8em; color: #999; margin-top: 30px; }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
+<div class="container">
     <div class="header">
-        <h2>🎾 KI-Regel-Experte (STB / DTB)</h2>
-        <p>A-Klasse bis Regionalliga & Turnierbetrieb</p>
-    </div>
-    
-    <div class="key-area">
-        API-Key benötigt: <input type="password" id="apiKey" placeholder="OpenAI API Key hier einfügen">
+        <h1 style="margin:0; color: var(--stb-blue);">🎾 Tennis-Regel-Check</h1>
+        <p style="margin:5px 0;">Saarland (STB) & Regionalliga (DTB)</p>
     </div>
 
-    <div id="chat-window">
-        <div class="message ai">Hallo! Ich kenne die Wettspielordnungen des STB und DTB (Stand 2025/26). Fragen Sie mich nach Aufstellungen, Match-Tie-Breaks oder Problemfällen.</div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Stichwort eingeben (z.B. MTB, Schuhe, w.o., Verspätung)..." onkeyup="performSearch()">
+        <div id="count" class="result-count">Hinterlegte Fälle: <span id="totalNum"></span></div>
     </div>
 
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Ihre Frage (z.B. 'Dritter Satz im Doppel?')">
-        <button onclick="askAI()">Fragen</button>
+    <div id="results">
+        <!-- Hier erscheinen die Suchergebnisse -->
     </div>
 </div>
 
+<footer>
+    Datenstand: April 2025/2026. Basierend auf STB-WO, DTB-TO und Refresher-Dokumenten.
+</footer>
+
 <script>
-    // Zusammengefasstes Wissen aus Ihren Quellen als Kontext für die KI
-    const TENNIS_KNOWLEDGE = `
-    KONTEX-WISSEN FÜR DIE KI:
-    - STB (Saarland): 3. Satz ist IMMER Match-Tie-Break (10 Punkte) [1].
-    - STB Wertung: Einzel 2 Punkte, Doppel 3 Punkte. Gesamt max 21 (6er) oder 14 (4er) [1].
-    - Verspätung STB: 15 Min nach Aufruf = 6:0, 6:0 Wertung [2]. 60 Min nach offizieller Zeit = Mannschaft nicht angetreten.
-    - Regionalliga: Spielt nach DTB-WSpO [3].
-    - DTB-TO §38.2: Werbung für andere Sport-Events auf Kleidung verboten [4, 5].
-    - Kleidung: Bei falschem Schuhwerk (z.B. keine Sandplatzschuhe) 15 Min Zeit zum Wechseln, sonst Disqualifikation [6, 7].
-    - Lucky Loser: Auch Spieler, die nach einer Rast in Runde 1 krank werden, können durch LL ersetzt werden [5, 8].
-    - Schiedsrichter: Spieler entscheidet auf seiner Seite. Bei Ballabdruck-Streit auf Sand entscheidet der OSR endgültig [9, 10].
-    - Behinderung: Absichtliches Sprechen während des Schlags ist Punktverlust [11, 12].
-    - Aufstellung: Reihenfolge nach LK/Rangliste zwingend. Falsche Position = 0:6, 0:6 für dieses und alle folgenden Spiele [13, 14].
-    `;
-
-    async function askAI() {
-        const apiKey = document.getElementById('apiKey').value;
-        const input = document.getElementById('userInput').value;
-        if (!apiKey) { alert("Bitte erst den API-Key eingeben!"); return; }
-        
-        appendMessage('user', input);
-        document.getElementById('userInput').value = '';
-
-        try {
-            const response = await fetch('https://api.openai.com/1/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + apiKey
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [
-                        { role: "system", content: "Du bist ein Experte für Tennis-Regeln im Saarland (STB) und überregional (DTB). Nutze folgendes Wissen: " + TENNIS_KNOWLEDGE },
-                        { role: "user", content: input }
-                    ]
-                })
-            });
-            const data = await response.json();
-            const aiReply = data.choices.message.content;
-            appendMessage('ai', aiReply);
-        } catch (e) {
-            appendMessage('ai', "Fehler: Verbindung zur KI fehlgeschlagen. Prüfe den Key.");
+    // Integrierte Wissensdatenbank aus den Quellen
+    const database = [
+        {
+            cat: "STB Saarland (Klassen-Betrieb)",
+            q: "Wie wird im STB der 3. Satz gewertet?",
+            a: "Ein notwendiger 3. Satz wird grundsätzlich als Match-Tie-Break bis 10 Punkte gespielt. Er wird im Spielbericht mit dem tatsächlichen Punktergebnis (z.B. 10:2) eingetragen, zählt in der Gesamtsumme der Spiele aber nur als 1:0 für den Sieger.",
+            src: "STB-WO §18.2",
+            tags: "dritter satz match tie break mtb wertung punkte"
+        },
+        {
+            cat: "Verspätung & Nichtantreten (STB)",
+            q: "Was passiert, wenn ein Spieler oder eine Mannschaft zu spät kommt?",
+            a: "15 Min. nach Aufruf: Das Spiel gilt als 6:0, 6:0 verloren (w.o.). 60 Min. nach offiziellem Beginn: Wenn weniger als 4 (6er-Team) bzw. 3 (4er-Team) Spieler anwesend sind, gilt die Mannschaft als nicht angetreten. Folge: Strafwertung 0:21/0:14 und die Mannschaft ist erster Absteiger.",
+            src: "STB-WO §16a.6 / §18.4",
+            tags: "verspätung zeit nichtantreten strafe abstieg"
+        },
+        {
+            cat: "Refresher 2026 / DTB",
+            q: "Darf man mit einem Shirt einer anderen Meisterschaft (z.B. ITA Championships) spielen?",
+            a: "Nein. Werbung für andere Sportveranstaltungen oder Events ist auf der Kleidung grundsätzlich nicht erlaubt.",
+            src: "DTB-TO §38.2 / Refresher Fall 1",
+            tags: "kleidung werbung shirt trikot erlaubt"
+        },
+        {
+            cat: "Refresher 2026 / DTB",
+            q: "Was passiert, wenn ein Spieler seine Tennisschuhe vergessen hat?",
+            a: "Er darf nicht ohne Schuhe oder in ungeeigneten Schuhen spielen. Er hat ab Aufruf 15 Minuten Zeit, sich geeignete Schuhe zu besorgen. Gelingt dies nicht, wird er disqualifiziert.",
+            src: "DTB-TO §38.1 / Refresher Fall 7",
+            tags: "schuhe kleidung vergessen socken sandplatz"
+        },
+        {
+            cat: "STB Saarland (Mannschaften)",
+            q: "Muss man einen Ausweis dabei haben?",
+            a: "Ja. Jeder Spieler muss einen amtlichen Lichtbildausweis (Personalausweis, Führerschein) mitführen. Mannschaftsführer sind verpflichtet, auf Verlangen des Oberschiedsrichters die Identität der Spieler nachzuweisen.",
+            src: "STB-WO §16.1",
+            tags: "ausweis identität legitimieren personalsusweis kontrolle"
+        },
+        {
+            cat: "Regionalliga / DTB",
+            q: "Wann wird im Doppel die 'No-Ad'-Regel angewendet?",
+            a: "In den Bundesligen der Damen wird im Doppel die 'No-Ad'-Regel (Entscheidungspunkt bei Einstand) angewendet. In den meisten anderen Klassen (außer explizit ausgeschrieben) gilt die normale Vorteils-Regel.",
+            src: "DTB-WSpO §55.9",
+            tags: "no-ad doppel einstand vorteil regionalliga"
+        },
+        {
+            cat: "STB Saarland (Wertung)",
+            q: "Wie viele Punkte gibt es für Einzel und Doppel im Saarland?",
+            a: "Sieg im Einzel: 2 Matchpunkte. Sieg im Doppel: 3 Matchpunkte. Gesamtsumme bei 6er-Teams: 21 Punkte. Bei 4er-Teams: 14 Punkte.",
+            src: "STB-WO §18.1",
+            tags: "punkte wertung einzel doppel tabelle"
+        },
+        {
+            cat: "Refresher 2026 / Lucky Loser",
+            q: "Darf ein Spieler als Lucky Loser einrücken, wenn er in Runde 1 eine Rast hatte?",
+            a: "Ja. Wenn ein gesetzter Spieler in der 1. Runde eine Rast hat und vor seinem ersten Spiel in der 2. Runde ausfällt, kann ein Lucky Loser eingesetzt werden.",
+            src: "DTB-TO §33.2.b / Refresher Fall 2",
+            tags: "lucky loser rast krankheit nachrücken"
+        },
+        {
+            cat: "STB Saarland (Turniere)",
+            q: "Welche Bälle sind bei STB-Turnieren vorgeschrieben?",
+            a: "Für LK-Turniere im STB ist zwingend die Marke 'Dunlop Fort Tournament' zu verwenden. Bei Jugendlichen gelten entsprechende Methodik-Bälle (z.B. Stage 2).",
+            src: "STB-Bestimmungen LK-Turniere Pkt. 3",
+            tags: "bälle marke dunlop fort tournament lk-turnier"
+        },
+        {
+            cat: "DTB / ITF Regeln",
+            q: "Was passiert, wenn ein Spieler während des Schlags laut ruft (z.B. 'Oh nein!')?",
+            a: "Wird der Gegner dadurch behindert, ist bei unabsichtlicher Behinderung der Punkt zu wiederholen. Bei absichtlicher Behinderung verliert der Spieler den Punkt.",
+            src: "ITF-Regel 26 / Refresher Fall 4",
+            tags: "behinderung rufen sprechen lärm"
         }
+    ];
+
+    function performSearch() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+        
+        const filtered = database.filter(item => 
+            item.q.toLowerCase().includes(input) || 
+            item.a.toLowerCase().includes(input) || 
+            item.tags.toLowerCase().includes(input)
+        );
+
+        document.getElementById('totalNum').innerText = filtered.length;
+
+        filtered.forEach(item => {
+            resultsDiv.innerHTML += `
+                <div class="rule-card">
+                    <div class="category">${item.cat}</div>
+                    <div class="question">${item.q}</div>
+                    <div class="answer">${item.a}</div>
+                    <div class="source">Quelle: ${item.src}</div>
+                </div>
+            `;
+        });
     }
 
-    function appendMessage(sender, text) {
-        const win = document.getElementById('chat-window');
-        const div = document.createElement('div');
-        div.className = 'message ' + sender;
-        div.innerText = text;
-        win.appendChild(div);
-        win.scrollTop = win.scrollHeight;
-    }
+    // Initial alle anzeigen
+    performSearch();
 </script>
 </body>
 </html>
