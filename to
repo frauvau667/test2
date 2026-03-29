@@ -1,0 +1,43 @@
+Seite 2: Turnierordnung (DTB)
+Diese Seite enthält die Regeln für den überregionalen Turnierbetrieb gemäß der DTB-Turnierordnung.
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suche: Turnierordnung (TO)</title>
+    <style>
+        body { font-family: sans-serif; background: #fff5f5; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; border: 1px solid #eec; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
+        .rule-card { border-left: 5px solid #c00; padding: 15px; margin-bottom: 10px; background: #fffafa; }
+        .source { font-size: 0.8em; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏆 Suche: Turnierordnung (DTB)</h1>
+    <input type="text" id="search" placeholder="Stichwort suchen (z.B. Lucky Loser, Rasten, Kleidung)..." onkeyup="search()">
+    <div id="results"></div>
+</div>
+<script>
+    const data = [
+        { q: "Wer darf an Nebenrunden teilnehmen?", a: "Teilnahmeberechtigt sind alle Spieler, die zu ihrem ersten Wettspiel in der ersten oder zweiten Runde des Hauptfelds antreten und verlieren [16].", s: "DTB-TO §11.4" },
+        { q: "Wie werden Lucky Loser (LL) ausgewählt?", a: "Zuerst kommen die Verlierer der Qualifikationsfinalspiele infrage, danach die Verlierer der Vorrunden [17]. Innerhalb dieser Gruppen entscheidet das Los über die Reihenfolge [17].", s: "DTB-TO §25.4" },
+        { q: "Darf Werbung auf der Spielkleidung sein?", a: "Werbung in angemessener Größe ist erlaubt, Werbung für andere Sportveranstaltungen oder Events ist jedoch grundsätzlich untersagt [18].", s: "DTB-TO §38.2" },
+        { q: "Gibt es Ruhepausen zwischen Sätzen?", a: "Senioren ab AK 35 können nach dem 2. Satz eine Pause von 10 Minuten beanspruchen [19]. Bei Anwendung des Match-Tie-Breaks entfällt diese Pause [19].", s: "DTB-TO §37.6" },
+        { q: "Was ist bei Verspätung zu tun?", a: "Ein Spieler, der nicht innerhalb von 15 Minuten nach Aufruf spielbereit ist, muss vom Oberschiedsrichter disqualifiziert werden [20].", s: "DTB-TO §37.9" },
+        { q: "Wann findet die Auslosung statt?", a: "Die Auslosung muss öffentlich erfolgen und ist spätestens am Vorabend des Spielbeginns durchzuführen [21, 22]. Das Ergebnis ist unverzüglich zu veröffentlichen [23].", s: "DTB-TO §32" }
+    ];
+    function search() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const results = document.getElementById('results');
+        results.innerHTML = data.filter(i => i.q.toLowerCase().includes(query) || i.a.toLowerCase().includes(query))
+            .map(i => `<div class='rule-card'><strong>${i.q}</strong><p>${i.a}</p><div class='source'>Quelle: ${i.s}</div></div>`).join('');
+    }
+    search();
+</script>
+</body>
+</html>
+
